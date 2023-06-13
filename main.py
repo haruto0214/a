@@ -39,7 +39,7 @@ else:
     show_posts()
 import streamlit as st
 
-<<<<<<< HEAD
+
 # 禁止ワードのリスト
 banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
 =======
