@@ -44,9 +44,9 @@ import streamlit as st
 banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
 
 import streamlit as st
->>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
 
-<<<<<<< HEAD
+
+
 # ユーザーの投稿内容をチェックする関数
 def check_post_content(post_content):
     # 禁止ワードの検出
@@ -54,12 +54,12 @@ def check_post_content(post_content):
         if banned_word in post_content:
             return True # 禁止ワードが検出された場合はTrueを返す
     return False # 禁止ワードが検出されなかった場合はFalseを返す
-=======
+
 # 禁止ワードのリスト
 banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
->>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
 
-<<<<<<< HEAD
+
+
 # 掲示板アプリのメイン処理
 def main():
     st.title("掲示板アプリ")
@@ -84,13 +84,13 @@ def check_post_content(post_content):
         if banned_word in post_content:
             return True # 禁止ワードが検出された場合はTrueを返す
     return False # 禁止ワードが検出されなかった場合はFalseを返す
->>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
 
-<<<<<<< HEAD
+
+
 # アプリの実行
 if __name__ == "__main__":
     main()
-=======
+
 # 掲示板アプリのメイン処理
 def main():
     st.title("掲示板アプリ")
@@ -107,13 +107,12 @@ def main():
         
         # 投稿内容を表示
         st.write("投稿内容:", post_content)
->>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
 
-<<<<<<< HEAD
-=======
+
+
+
 # アプリの実行
 if __name__ == "__main__":
     main()
 
 
->>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
