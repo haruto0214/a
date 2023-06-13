@@ -76,7 +76,7 @@ def main():
         
         # 投稿内容を表示
         st.write("投稿内容:", post_content)
-=======
+
 # ユーザーの投稿内容をチェックする関数
 def check_post_content(post_content):
     # 禁止ワードの検出
