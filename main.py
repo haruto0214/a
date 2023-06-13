@@ -42,7 +42,7 @@ import streamlit as st
 
 # 禁止ワードのリスト
 banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
-=======
+
 import streamlit as st
 >>>>>>> 1f7fe387894e5b6aa0ebcf8c403b4b5060ae0593
 
