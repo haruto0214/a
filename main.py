@@ -30,10 +30,7 @@ content = st.text_area("内容")
 if st.button("作成！"):
     create_post(title, content)
     st.success("作成完了！")
-# 投稿の保存
-def save_post(content):
-    c.execute("INSERT INTO posts VALUES (?)", (content,))
-    conn.commit()
+
 # 投稿一覧の表示
 st.header("スレタイトル一覧")
 if len(posts) == 0:
@@ -41,3 +38,23 @@ if len(posts) == 0:
 else:
     show_posts()
 
+
+# 投稿の保存
+def save_post(content):
+    posts.append(content)
+
+# Streamlitアプリケーションの設定
+st.title('掲示板アプリ')
+
+# 投稿フォーム
+new_post = st.text_input('新規投稿')
+if st.button('投稿'):
+    save_post(new_post)
+    st.success('投稿が保存されました。')
+
+# リスト内の投稿を表示
+if len(posts) > 0:
+    df = pd.DataFrame(posts, columns=['投稿内容'])
+    st.dataframe(df)
+else:
+    st.warning('まだ投稿がありません。')
