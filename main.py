@@ -56,5 +56,33 @@ def main():
 if __name__ == "__main__":
     main()
 
+import streamlit as st
+
+# 投稿クラス
+class Post:
+    def __init__(self, title, content, link):
+        self.title = title
+        self.content = content
+        self.link = link
+
+# 投稿のリスト
+posts = [
+    Post("投稿1", "これは投稿1の内容です。", "https://example.com/post1"),
+    Post("投稿2", "これは投稿2の内容です。", "https://example.com/post2"),
+    Post("投稿3", "これは投稿3の内容です。", "https://example.com/post3")
+]
+
+# 掲示板アプリ
+def main():
+    st.title("掲示板アプリ")
+
+    # 各投稿を表示
+    for post in posts:
+        # タイトルをリンクとして表示
+        st.markdown(f"## [{post.title}]({post.link})")
+        st.write(post.content)
+
+if __name__ == "__main__":
+    main()
 
 
