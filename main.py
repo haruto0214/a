@@ -89,9 +89,7 @@ def main():
         # タイトルをリンクとして表示
         st.markdown(f"## [{post.title}]({post.link})")
         st.write(post.content)
+        st.write("---")  # 区切り線
 
 if __name__ == "__main__":
     main()
-
-
-
