@@ -1,118 +1,60 @@
 
-import math
 import streamlit as st
-import pandas as pd
-
-st.text("ヤッハロー")
-#         ↑ガハマすこ
-
-# 投稿データを保持するリスト
-posts = []
-
-# 投稿の作成
-def create_post(title, content):
-    posts.append({"title": title, "content": content})
-
-# 投稿の表示
-def show_posts():
-    for post in posts:
-        st.write(f"**{post['title']}**")
-        st.write(post['content'])
-        st.write('---')
-
-# 掲示板アプリのタイトル
-st.title("舞チャン")
-
-# 新しい投稿の作成
-st.header("新しい投稿を作成")
-title = st.text_input("スレタイトル")
-content = st.text_area("内容")
-if st.button("作成！"):
-    create_post(title, content)
-    st.success("作成完了！")
-
-# 投稿一覧の表示
-st.header("スレタイトル一覧")
-if len(posts) == 0:
-    st.info("まだ投稿はありません")
-else:
-    show_posts()
-import streamlit as st
-
+import json
 
 # 禁止ワードのリスト
-banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
-
-import streamlit as st
-
-
+banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
 
 # ユーザーの投稿内容をチェックする関数
-def check_post_content(post_content):
-    # 禁止ワードの検出
+def check_post_content(title, content):
+    # タイトルと投稿内容の禁止ワードの検出
     for banned_word in banned_words:
-        if banned_word in post_content:
-            return True # 禁止ワードが検出された場合はTrueを返す
-    return False # 禁止ワードが検出されなかった場合はFalseを返す
+        if banned_word in title:
+            title = title.replace(banned_word, "＠" * len(banned_word))
+        if banned_word in content:
+            content = content.replace(banned_word, "＠" * len(banned_word))
+    return title, content
 
-# 禁止ワードのリスト
-banned_words = ["バカ", "禁止ワード2", "禁止ワード3"]
+def save_post(title, content):
+    post = {"title": title, "content": content}
+    with open('posts.json', 'a') as file:
+        json.dump(post, file)
+        file.write('\n')
 
+def load_posts():
+    with open('posts.json', 'r') as file:
+        return [json.loads(line) for line in file]
 
-
-# 掲示板アプリのメイン処理
 def main():
     st.title("掲示板アプリ")
-    
-    # ユーザーの投稿内容を入力
-    post_content = st.text_input("投稿内容")
-    
-    # 投稿ボタンがクリックされた場合の処理
-    if st.button("投稿"):
-        # 禁止ワードのチェック
-        if check_post_content(post_content):
-            # 禁止ワードが検出された場合は警報を出す
+
+    # 新規投稿の入力
+    new_post_title = st.text_input("タイトル")
+    new_post_content = st.text_area("新規投稿", height=100)
+
+    # 投稿ボタンが押された場合
+    if st.button("投稿する") and new_post_title and new_post_content:
+        new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
+        if "＠" in new_post_title or "＠" in new_post_content:
             st.warning("禁止ワードが含まれています！")
-        
-        # 投稿内容を表示
-        st.write("投稿内容:", post_content)
 
-# ユーザーの投稿内容をチェックする関数
-def check_post_content(post_content):
-    # 禁止ワードの検出
-    for banned_word in banned_words:
-        if banned_word in post_content:
-            return True # 禁止ワードが検出された場合はTrueを返す
-    return False # 禁止ワードが検出されなかった場合はFalseを返す
+        save_post(new_post_title, new_post_content)
+        st.success("投稿が保存されました！")
 
+    # 保存された投稿の表示
+    posts = load_posts()
+    st.subheader("保存された投稿")
 
+    if not posts:
+        st.info("まだ投稿がありません。")
+    else:
+        for post in posts:
+            st.text(post["title"])
+            st.text(post["content"])
+            st.markdown("---")
 
-# アプリの実行
 if __name__ == "__main__":
     main()
 
-# 掲示板アプリのメイン処理
-def main():
-    st.title("掲示板アプリ")
-    
-    # ユーザーの投稿内容を入力
-    post_content = st.text_input("投稿内容")
-    
-    # 投稿ボタンがクリックされた場合の処理
-    if st.button("投稿"):
-        # 禁止ワードのチェック
-        if check_post_content(post_content):
-            # 禁止ワードが検出された場合は警報を出す
-            st.warning("禁止ワードが含まれています！")
-        
-        # 投稿内容を表示
-        st.write("投稿内容:", post_content)
-
-
-
-
-# アプリの実行
-if __name__ == "__main__":
-    main()
 
 
