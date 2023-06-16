@@ -66,15 +66,23 @@ class Post:
         self.link = link
 
 # 投稿のリスト
-posts = [
-    Post("投稿1", "これは投稿1の内容です。", "https://example.com/post1"),
-    Post("投稿2", "これは投稿2の内容です。", "https://example.com/post2"),
-    Post("投稿3", "これは投稿3の内容です。", "https://example.com/post3")
-]
+posts = []
 
 # 掲示板アプリ
 def main():
     st.title("掲示板アプリ")
+
+    # 新しい投稿を作成
+    st.header("新しい投稿")
+    title = st.text_input("タイトル")
+    content = st.text_area("内容")
+    link = st.text_input("リンク")
+
+    # 投稿を追加するボタンがクリックされた場合
+    if st.button("投稿する"):
+        new_post = Post(title, content, link)
+        posts.append(new_post)
+        st.success("投稿が追加されました！")
 
     # 各投稿を表示
     for post in posts:
@@ -84,5 +92,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
