@@ -49,27 +49,13 @@ def main():
         st.info("まだ投稿がありません。")
     else:
         for post in posts:
-            st.text(post["title"])
-            st.text(post["content"])
+            # 各タイトルにリンクを付けて表示
+            post_url = f"[{post['title']}](#{post['title']})"
+            st.markdown(post_url, unsafe_allow_html=True)
+            st.write(post['content'])
             st.markdown("---")
 
 if __name__ == "__main__":
     main()
-import streamlit as st
 
-# 掲示板のデータ（仮想的なデータ）
-bulletin_board = [
-    {"title": "記事1", "content": "これは記事1の内容です。"},
-    {"title": "記事2", "content": "これは記事2の内容です。"},
-    {"title": "記事3", "content": "これは記事3の内容です。"}
-]
-
-# 掲示板の表示
-st.title("掲示板アプリ")
-
-for post in bulletin_board:
-    # 各タイトルにリンクを付けて表示
-    post_url = st.text_input("URL", value=f"[{post['title']}](#{post['title']})")
-    st.markdown(post_url, unsafe_allow_html=True)
-    st.write(post['content'])
 
