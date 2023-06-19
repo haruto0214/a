@@ -58,38 +58,19 @@ if __name__ == "__main__":
 
 import streamlit as st
 
-# 投稿クラス
-class Post:
-    def __init__(self, title, content, link):
-        self.title = title
-        self.content = content
-        self.link = link
+# 掲示板のデータ（仮想的なデータ）
+bulletin_board = [
+    {"title": "記事1", "content": "これは記事1の内容です。"},
+    {"title": "記事2", "content": "これは記事2の内容です。"},
+    {"title": "記事3", "content": "これは記事3の内容です。"}
+]
 
-# 投稿のリスト
-posts = []
+# 掲示板の表示
+st.title("掲示板アプリ")
 
-# 掲示板アプリ
-def main():
-    st.title("掲示板アプリ")
+for post in bulletin_board:
+    # 各タイトルにリンクを付けて表示
+    post_url = f"# {post['title']}"
+    st.markdown(f"[{post['title']}]({post_url})")
+    st.write(post['content'])
 
-    # 新しい投稿を作成
-    st.header("新しい投稿")
-    title = st.text_input("タイトル")
-    content = st.text_area("内容")
-    link = st.text_input("リンク")
-
-    # 投稿を追加するボタンがクリックされた場合
-    if st.button("投稿する"):
-        new_post = Post(title, content, link)
-        posts.append(new_post)
-        st.success("投稿が追加されました！")
-
-    # 各投稿を表示
-    for post in posts:
-        # タイトルをリンクとして表示
-        st.markdown(f"## [{post.title}]({post.link})")
-        st.write(post.content)
-        st.write("---")  # 区切り線
-
-if __name__ == "__main__":
-    main()
