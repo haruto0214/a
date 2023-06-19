@@ -1,4 +1,3 @@
-
 import streamlit as st
 import json
 
@@ -45,7 +44,7 @@ def main():
     if not posts:
         st.info("まだ投稿がありません。")
     else:
-        for post in reversed(posts):  # 投稿の表示順序を逆にする
+        for post in reversed(posts):
             # 各タイトルにリンクを付けて表示
             post_url = f"[{post['title']}](#{post['title']})"
             st.markdown(post_url, unsafe_allow_html=True)
@@ -54,3 +53,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
