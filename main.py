@@ -2,9 +2,6 @@
 import streamlit as st
 import json
 
-# 禁止ワードのリスト
-banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
-
 # ユーザーの投稿内容をチェックする関数
 def check_post_content(title, content):
     # タイトルと投稿内容の禁止ワードの検出
@@ -48,7 +45,7 @@ def main():
     if not posts:
         st.info("まだ投稿がありません。")
     else:
-        for post in posts:
+        for post in reversed(posts):  # 投稿の表示順序を逆にする
             # 各タイトルにリンクを付けて表示
             post_url = f"[{post['title']}](#{post['title']})"
             st.markdown(post_url, unsafe_allow_html=True)
@@ -57,5 +54,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
