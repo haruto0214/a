@@ -55,7 +55,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 import streamlit as st
 
 # 掲示板のデータ（仮想的なデータ）
@@ -70,7 +69,7 @@ st.title("掲示板アプリ")
 
 for post in bulletin_board:
     # 各タイトルにリンクを付けて表示
-    post_url = f"# {post['title']}"
-    st.markdown(f"[{post['title']}]({post_url})")
+    post_url = st.text_input("URL", value=f"[{post['title']}](#{post['title']})")
+    st.markdown(post_url, unsafe_allow_html=True)
     st.write(post['content'])
 
