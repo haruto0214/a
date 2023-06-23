@@ -14,15 +14,30 @@ def check_post_content(title, content):
             content = content.replace(banned_word, "＠" * len(banned_word))
     return title, content
 
+import json
+
 def save_post(title, content):
     post = {"title": title, "content": content}
     with open('posts.json', 'a') as file:
         json.dump(post, file)
         file.write('\n')
 
+    print("投稿を保存しました。")
+    print("[保存された投稿を表示する](load_posts)")
+
 def load_posts():
     with open('posts.json', 'r') as file:
-        return [json.loads(line) for line in file]
+        posts = [json.loads(line) for line in file]
+
+    if len(posts) > 0:
+        print("保存された投稿:")
+        for i, post in enumerate(posts, start=1):
+            print(f"{i}. {post['title']}: {post['content']}")
+    else:
+        print("保存された投稿はありません。")
+    print("[新しい投稿を保存する](save_post)")
+
+
 
 def main():
     st.title("掲示板アプリ")
