@@ -14,30 +14,15 @@ def check_post_content(title, content):
             content = content.replace(banned_word, "＠" * len(banned_word))
     return title, content
 
-import json
-
 def save_post(title, content):
     post = {"title": title, "content": content}
     with open('posts.json', 'a') as file:
         json.dump(post, file)
         file.write('\n')
 
-    print("投稿を保存しました。")
-    print("[保存された投稿を表示する](load_posts)")
-
 def load_posts():
     with open('posts.json', 'r') as file:
-        posts = [json.loads(line) for line in file]
-
-    if len(posts) > 0:
-        print("保存された投稿:")
-        for i, post in enumerate(posts, start=1):
-            print(f"{i}. {post['title']}: {post['content']}")
-    else:
-        print("保存された投稿はありません。")
-    print("[新しい投稿を保存する](save_post)")
-
-
+        return [json.loads(line) for line in file]
 
 def main():
     st.title("掲示板アプリ")
@@ -64,10 +49,28 @@ def main():
     else:
         for post in posts:
             # 各タイトルにリンクを付けて表示
-            post_url = f"[{post['title']}](#{post['title']})"
-            st.markdown(post_url, unsafe_allow_html=True)
-            st.write(post['content'])
-            st.markdown("---")
+           import streamlit as st
+
+posts = [
+    {
+        'title': 'タイトル1',
+        'content': 'タイトル1のコンテンツ'
+    },
+    {
+        'title': 'タイトル2',
+        'content': 'タイトル2のコンテンツ'
+    },
+    {
+        'title': 'タイトル3',
+        'content': 'タイトル3のコンテンツ'
+    }
+]
+
+for post in posts:
+    post_url = f"[{post['title']}](#{post['title']})"
+    st.markdown(post_url, unsafe_allow_html=True)
+    st.write(post['content'])
+    st.markdown("---")
 
 if __name__ == "__main__":
     main()
