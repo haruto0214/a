@@ -52,7 +52,6 @@ def main():
         st.info("まだ投稿がありません。")
     else:
         for post in posts:
-            post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
             st.text(post["title"])
             st.text(post["content"])
             st.text("投稿時刻: " + post.get("timestamp", ""))
