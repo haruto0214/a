@@ -57,6 +57,7 @@ def main():
             post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
             st.write(post['content'])
             st.markdown(post_url, unsafe_allow_html=True)
+            st.text("投稿時刻: " + post.get("timestamp", ""))
             st.markdown("---")
 
 if __name__ == "__main__":
