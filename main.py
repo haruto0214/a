@@ -2,6 +2,7 @@ import streamlit as st
 import json
 from datetime import datetime
 import pytz
+import urllib.parse
 
 # 禁止ワードのリスト
 banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
@@ -32,9 +33,9 @@ def main():
     st.title("掲示板アプリ")
 
     # 新規投稿の入力
-    new_post_title = st.text_input("タイトル")
+    
     new_post_content = st.text_area("新規投稿", height=100)
-
+    new_post_title = st.text_input("ページ")
     # 投稿ボタンが押された場合
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
@@ -43,7 +44,7 @@ def main():
 
         save_post(new_post_title, new_post_content)
         st.success("投稿が保存されました！")
- 
+
     # 保存された投稿の表示
     posts = load_posts()
     st.subheader("保存された投稿")
@@ -52,10 +53,11 @@ def main():
         st.info("まだ投稿がありません。")
     else:
         for post in posts:
-            st.text(post["title"])
-            st.text(post["content"])
-            st.text("投稿時刻: " + post.get("timestamp", ""))
+            # 各タイトルにリンクを付けて表示
+            post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
+            st.write(post['content'])
+            st.markdown(post_url, unsafe_allow_html=True)
             st.markdown("---")
- 
+
 if __name__ == "__main__":
     main()
