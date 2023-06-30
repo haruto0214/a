@@ -56,6 +56,7 @@ def main():
             st.text(post["content"])
             st.text("投稿時刻: " + post.get("timestamp", ""))
             st.markdown("---")
-
+ # 各タイトルにリンクを付けて表示
+            post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
 if __name__ == "__main__":
     main()
