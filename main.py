@@ -63,6 +63,46 @@ def main():
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプを表示
             st.markdown("---")
+import streamlit as st
+import pandas as pd
+
+def delete_post(posts, post_id):
+    # 投稿を削除する処理を実装する
+    # ここではダミーのデータフレームを使用しています
+    posts = posts[posts['post_id'] != post_id]
+    return posts
+
+def main():
+    # 過去の投稿を格納するデータフレームを作成する
+    posts = pd.DataFrame({
+        'post_id': [1, 2, 3],
+        'content': ['投稿1', '投稿2', '投稿3']
+    })
+
+    st.title('投稿削除アプリ')
+
+    # 投稿一覧を表示する
+    st.subheader('投稿一覧')
+    st.dataframe(posts)
+
+    # 削除する投稿のIDを入力する
+    post_id = st.text_input('削除する投稿のIDを入力してください')
+
+    # 削除ボタンがクリックされた場合の処理
+    if st.button('削除'):
+        if post_id:
+            try:
+                post_id = int(post_id)
+                posts = delete_post(posts, post_id)
+                st.success('投稿が削除されました')
+            except ValueError:
+                st.error('無効な投稿IDです')
+        else:
+            st.warning('投稿IDを入力してください')
+
+    # 更新された投稿一覧を表示する
+    st.subheader('更新された投稿一覧')
+    st.dataframe(posts)
 
 if __name__ == "__main__":
     main()
