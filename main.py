@@ -102,7 +102,7 @@ def main():
     if len(messages) > 0:
         st.subheader("メッセージの削除")
         message_to_delete = st.selectbox("あ:", messages)
-        delete_word = st.text_input("削除ワードを入力してください:")
+        delete_word = st.text_input("あ:")
         if st.button("削除") and delete_word in message_to_delete:
             delete_message(message_to_delete)
             st.success("メッセージが削除されました。")
