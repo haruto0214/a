@@ -67,36 +67,43 @@ import streamlit as st
 import pandas as pd
 import streamlit as st
 import pandas as pd
+import streamlit as st
 
-def delete_post(posts, post_id):
-    # 投稿を削除する処理を実装する
-    posts = posts[posts['post_id'] != post_id]
-    return posts
+# 投稿を格納するリスト
+messages = []
 
+def add_message(message):
+    messages.append(message)
+
+def delete_message(message):
+    if message in messages:
+        messages.remove(message)
+
+def display_messages():
+    if len(messages) == 0:
+        st.write("まだ投稿はありません。")
+    else:
+        for i, message in enumerate(messages, start=1):
+            st.write(f"{i}. {message}")
+
+# メインのStreamlitアプリケーション
 def main():
-    # 過去の投稿を格納するデータフレームを作成する
-    posts = pd.DataFrame({
-        'post_id': [1, 2, 3],
-        'content': ['投稿1', '投稿2', '投稿3']
-    })
+    st.title("掲示板アプリ")
 
-    st.title('掲示板アプリ')
+    # メッセージの入力と追加
+    new_message = st.text_input("新しいメッセージを入力してください:")
+    if st.button("投稿"):
+        add_message(new_message)
 
-    # 投稿一覧を表示する
-    st.subheader('投稿一覧')
-    st.dataframe(posts)
+    # メッセージの表示と削除
+    display_messages()
 
-    # 削除する投稿のIDを入力する
-    post_id = st.number_input('削除する投稿のIDを入力してください', min_value=1, max_value=100, value=1)
-
-    # 削除ボタンがクリックされた場合の処理
-    if st.button('削除'):
-        posts = delete_post(posts, post_id)
-        st.success('投稿が削除されました')
-
-    # 更新された投稿一覧を表示する
-    st.subheader('更新された投稿一覧')
-    st.dataframe(posts)
+    if len(messages) > 0:
+        st.subheader("メッセージの削除")
+        message_to_delete = st.selectbox("削除するメッセージを選択してください:", messages)
+        if st.button("削除"):
+            delete_message(message_to_delete)
+            st.success("メッセージが削除されました。")
 
 if __name__ == "__main__":
     main()
