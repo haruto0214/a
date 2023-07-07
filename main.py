@@ -64,30 +64,18 @@ def main():
             st.write(post['timestamp'])  # タイムスタンプを表示
             st.markdown("---")
 
-    st.subheader("投稿の削除")
+  st.subheader("投稿の削除")
     if len(posts) > 0:
         # 削除する投稿を選択します
         delete_post_index = st.selectbox("削除する投稿を選択してください", range(1, len(posts)+1))
-
-        # 削除の条件を定義します
-        delete_conditions = st.multiselect("削除の条件を選択してください", ["長さ > 10", "特定のワードを含む"])
         delete_button = st.button("投稿を削除する")
 
         if delete_button:
-            # 削除の条件をチェックします
-            selected_post = posts[delete_post_index-1]
-            if ("長さ > 10" in delete_conditions and len(selected_post) > 10) or \
-                    ("特定のワードを含む" in delete_conditions and "ワード" in selected_post):
-                # 投稿を削除します
-                del posts[delete_post_index-1]
-                st.success("投稿が正常に削除されました！")
-            else:
-                st.warning("投稿は削除条件を満たしていません。")
+            # 選択した投稿を削除します
+            del posts[delete_post_index-1]
+            st.success("投稿が正常に削除されました！")
     else:
         st.write("削除する投稿はありません。")
-
-# Streamlitアプリを実行します
-app_layout()
 
 if __name__ == "__main__":
     main()
