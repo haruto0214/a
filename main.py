@@ -64,7 +64,7 @@ def main():
             st.write(post['timestamp'])  # タイムスタンプを表示
             st.markdown("---")
 
-  st.subheader("投稿の削除")
+　　st.subheader("投稿の削除")
     if len(posts) > 0:
         # 削除する投稿を選択します
         delete_post_index = st.selectbox("削除する投稿を選択してください", range(1, len(posts)+1))
