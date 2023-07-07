@@ -36,6 +36,18 @@ def load_posts():
 
         return posts
 
+def delete_post(posts, post_index):
+    if 0 <= post_index < len(posts):
+        deleted_post = posts.pop(post_index)
+        with open('posts.json', 'w') as file:
+            for post in posts:
+                file.write(json.dumps(post))
+                file.write('\n')
+        st.success("投稿が削除されました！")
+        return deleted_post
+    else:
+        st.warning("無効な投稿インデックスです。")
+
 def main():
     st.title("テスト")
 
@@ -63,6 +75,9 @@ def main():
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプを表示
             st.markdown("---")
-
+　　　　　　 if st.button("削除", key=f"delete_{i}"):
+                deleted_post = delete_post(posts, i)
+                st.info(f"以下の投稿が削除されました:\n\n{deleted_post['content']}")
+            st.markdown("---")
 if __name__ == "__main__":
     main()
