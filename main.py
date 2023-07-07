@@ -74,10 +74,9 @@ def main():
         for post in posts:
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプを表示
-            st.markdown("---")
-    if st.button("削除", key=f"delete_{i}"):
+            if st.button("削除", key=f"delete_{i}"):
                 deleted_post = delete_post(posts, i)
-                st.info(f"以下の投稿が削除されました:\n\n{deleted_post['content']}")
-        st.markdown("---")
+                st.info(f"以下の投稿が削除されました:\n\n{deleted_post['content']}") 
+            st.markdown("___")
 if __name__ == "__main__":
     main()
