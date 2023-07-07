@@ -1,41 +1,93 @@
 import streamlit as st
+import json
+from datetime import datetime
+import pytz
+import urllib.parse
 
-# 投稿を格納するリスト
-messages = []
+# 禁止ワードのリスト
+banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
 
-def add_message(message):
-    messages.append(message)
+# ユーザーの投稿内容をチェックする関数
+def check_post_content(content):
+    # タイトルと投稿内容の禁止ワードの検出
+    for banned_word in banned_words:
+        if banned_word in content:
+            content = content.replace(banned_word, "＠" * len(banned_word))
+    return content
 
-def delete_message(message):
-    if message in messages:
-        messages.remove(message)
+def save_post(content):
+    now = datetime.now(pytz.timezone("Asia/Tokyo"))
+    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    post = {"content": content, "timestamp": now_str}
+    with open('posts.json', 'a') as file:
+        file.write(json.dumps(post))
+        file.write('\n')
 
-def display_messages():
-    if len(messages) == 0:
-        st.write("まだ投稿はありません。")
-    else:
-        for i, message in enumerate(messages, start=1):
-            st.write(f"{i}. {message}")
+def load_posts():
+    with open('posts.json', 'r') as file:
+        lines = file.readlines()
+        posts = [json.loads(line.strip()) for line in lines]
+        
+        # タイムスタンプを日本時間に変換
+        for post in posts:
+            timestamp = datetime.strptime(post['timestamp'], "%Y-%m-%d %H:%M:%S")
+            timestamp = pytz.timezone("Asia/Tokyo").localize(timestamp)
+            post['timestamp'] = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
-# メインのStreamlitアプリケーション
+        return posts
+
 def main():
-    st.title("掲示板アプリ")
+    st.title("テスト")
 
-    # メッセージの入力と追加
-    new_message = st.text_input("新しいメッセージを入力してください:")
-    if st.button("投稿"):
-        add_message(new_message)
+    # 新規投稿の入力
+    new_post_content = st.text_area("投稿", height=100)
 
-    # メッセージの表示と削除
-    display_messages()
+    
+    # 投稿ボタンが押された場合
+    if st.button("投稿する") and new_post_content:
+        new_post_content = check_post_content(new_post_content)
+        if "＠" in new_post_content:
+            st.warning("禁止ワードが含まれています！")
 
-    if len(messages) > 0:
-        st.subheader("メッセージの削除")
-        message_to_delete = st.selectbox("削除するメッセージを選択してください:", messages)
-        delete_word = st.text_input("削除ワードを入力してください:")
-        if st.button("削除") and delete_word in message_to_delete:
-            delete_message(message_to_delete)
-            st.success("メッセージが削除されました。")
+        save_post(new_post_content)
+        st.success("投稿が保存されました！")
+
+    # 保存された投稿の表示
+    posts = load_posts()
+    st.subheader("保存された投稿")
+
+    if not posts:
+        st.info("まだ投稿がありません。")
+    else:
+        for post in posts:
+            st.subheader(post['content'])
+            st.write(post['timestamp'])  # タイムスタンプを表示
+            st.markdown("---")
+
+    st.subheader("投稿の削除")
+    if len(posts) > 0:
+        # 削除する投稿を選択します
+        delete_post_index = st.selectbox("削除する投稿を選択してください", range(1, len(posts)+1))
+
+        # 削除の条件を定義します
+        delete_conditions = st.multiselect("削除の条件を選択してください", ["長さ > 10", "特定のワードを含む"])
+        delete_button = st.button("投稿を削除する")
+
+        if delete_button:
+            # 削除の条件をチェックします
+            selected_post = posts[delete_post_index-1]
+            if ("長さ > 10" in delete_conditions and len(selected_post) > 10) or \
+                    ("特定のワードを含む" in delete_conditions and "ワード" in selected_post):
+                # 投稿を削除します
+                del posts[delete_post_index-1]
+                st.success("投稿が正常に削除されました！")
+            else:
+                st.warning("投稿は削除条件を満たしていません。")
+    else:
+        st.write("削除する投稿はありません。")
+
+# Streamlitアプリを実行します
+app_layout()
 
 if __name__ == "__main__":
     main()
