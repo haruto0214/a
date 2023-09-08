@@ -2,16 +2,18 @@ import json
 from datetime import datetime
 import pytz
 import urllib.parse
+import streamlit as st
 
 # 禁止ワードのリスト
 banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
-	@@ -17,24 +18,33 @@ def check_post_content(title, content):
+
+def check_post_content(title, content):
     return title, content
 
-def save_post(title, content):
+def save_post(title, content, good_count=0, bad_count=0):
     now = datetime.now(pytz.timezone("Asia/Tokyo"))
     now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-    post = {"title": title, "content": content, "timestamp": now_str}
+    post = {"title": title, "content": content, "timestamp": now_str, "good_count": good_count, "bad_count": bad_count}
     with open('posts.json', 'a') as file:
         file.write(json.dumps(post))
         file.write('\n')
@@ -39,7 +41,12 @@ def main():
     # 投稿ボタンが押された場合
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
-	@@ -52,12 +62,12 @@ def main():
+        save_post(new_post_title, new_post_content)
+    
+    # 投稿を読み込む
+    posts = load_posts()
+    
+    if not posts:
         st.info("まだ投稿がありません。")
     else:
         for post in posts:
@@ -47,6 +54,17 @@ def main():
             post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプを表示
+
+            # Goodボタン
+            if st.button(f"Good ({post['good_count']})", key=f"good_{post['title']}"):
+                post['good_count'] += 1
+                save_post(post['title'], post['content'], post['good_count'], post['bad_count'])
+
+            # Badボタン
+            if st.button(f"Bad ({post['bad_count']})", key=f"bad_{post['title']}"):
+                post['bad_count'] += 1
+                save_post(post['title'], post['content'], post['good_count'], post['bad_count'])
+
             st.markdown(post_url, unsafe_allow_html=True)
             st.markdown("---")
 
