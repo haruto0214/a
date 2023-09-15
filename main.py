@@ -60,7 +60,6 @@ def main():
             good_button = col1.button(f"Good ({post_ratings[post['title']]['good']})", key=f"good_{post['title']}")
             bad_button = col2.button(f"Bad ({post_ratings[post['title']]['bad']})", key=f"bad_{post['title']}")
             if good_button:
-	@@ -81,3 +81,4 @@ def main():
 
     # Goodボタンのイラスト
     good_icon = "👍"
