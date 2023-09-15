@@ -29,11 +29,6 @@ for post in posts:
     st.markdown(post_url, unsafe_allow_html=True)
     st.markdown("---")
 
-# 禁止ワードのリスト
-banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
-	@@ -17,24 +18,33 @@ def check_post_content(title, content):
-    return title, content
-
 def save_post(title, content):
     now = datetime.now(pytz.timezone("Asia/Tokyo"))
     now_str = now.strftime("%Y-%m-%d %H:%M:%S")
