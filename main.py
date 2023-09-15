@@ -60,7 +60,6 @@ def main():
     # 投稿ボタンが押された場合
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
-	@@ -52,12 +62,12 @@ def main():
         st.info("まだ投稿がありません。")
 　　#ボタンカウンター
         st.title("GoodボタンとBadボタンのイラスト")
