@@ -6,6 +6,12 @@ import urllib.parse
 good_counter = 0
 bad_counter = 0
 
+# Goodボタンのイラスト
+good_icon = "👍"
+
+# Badボタンのイラスト
+bad_icon = "👎"
+
 for post in posts:
     # 各タイトルにリンクを付けて表示
     post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
@@ -22,7 +28,6 @@ for post in posts:
     
     st.markdown(post_url, unsafe_allow_html=True)
     st.markdown("---")
-
 
 # 禁止ワードのリスト
 banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
@@ -63,8 +68,16 @@ def main():
 	@@ -52,12 +62,12 @@ def main():
         st.info("まだ投稿がありません。")
 　　#ボタンカウンター
-     st.write(f"Good: {good_counter}")
-     st.write(f"Bad: {bad_counter}")
+        st.title("GoodボタンとBadボタンのイラスト")
+
+    st.markdown("Goodボタンをクリックすると、Goodのカウントが増えます。")
+    st.markdown("Badボタンをクリックすると、Badのカウントが増えます。")
+
+    good_count = st.button(f"{good_icon} Good")
+    bad_count = st.button(f"{bad_icon} Bad")
+
+    st.write(f"Good: {good_count}")
+    st.write(f"Bad: {bad_count}")
 
 if __name__ == "__main__":
     main()
