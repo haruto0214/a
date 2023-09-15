@@ -61,7 +61,7 @@ def main():
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
         st.info("まだ投稿がありません。")
-　　#ボタンカウンター
+    #ボタンカウンター
         st.title("GoodボタンとBadボタンのイラスト")
 
     st.markdown("Goodボタンをクリックすると、Goodのカウントが増えます。")
