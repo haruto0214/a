@@ -62,10 +62,10 @@ def main():
             if good_button:
 
     # Goodボタンのイラスト
-        good_icon = "👍"
+    good_icon = "👍"
 
     # Badボタンのイラスト
-        bad_icon = "👎"
+    bad_icon = "👎"
 
 def main():
     st.title("GoodボタンとBadボタンのイラスト")
