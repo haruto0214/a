@@ -1,83 +1,95 @@
+import streamlit as st
 import json
 from datetime import datetime
 import pytz
 import urllib.parse
-import streamlit as st
+
 # 禁止ワードのリスト
 banned_words = ["馬鹿", "禁止ワード2", "禁止ワード3"]
-# 各投稿にgoodとbadの評価を保持するための辞書
-post_ratings = {}
+
+# ユーザーの投稿内容をチェックする関数
 def check_post_content(title, content):
-    # 禁止ワードが含まれているかチェック
-    for word in banned_words:
-        if word in title or word in content:
-            st.warning("禁止ワードが含まれています！")
-            return "", ""
+    # タイトルと投稿内容の禁止ワードの検出
+    for banned_word in banned_words:
+        if banned_word in title:
+            title = title.replace(banned_word, "＠" * len(banned_word))
+        if banned_word in content:
+            content = content.replace(banned_word, "＠" * len(banned_word))
     return title, content
+
+# 投稿ごとのGoodとBadのカウンターを管理する辞書
+post_votes = {}
+
 def save_post(title, content):
     now = datetime.now(pytz.timezone("Asia/Tokyo"))
     now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-    post = {"title": title, "content": content, "timestamp": now_str, "good": 0, "bad": 0}
+    post = {"title": title, "content": content, "timestamp": now_str}
     with open('posts.json', 'a') as file:
         file.write(json.dumps(post))
         file.write('\n')
-    post_ratings[title] = {"good": 0, "bad": 0}  # 評価カウンターを初期化
+
 def load_posts():
     with open('posts.json', 'r') as file:
         lines = file.readlines()
         posts = [json.loads(line.strip()) for line in lines]
+
         # タイムスタンプを日本時間に変換
         for post in posts:
             timestamp = datetime.strptime(post['timestamp'], "%Y-%m-%d %H:%M:%S")
             timestamp = pytz.timezone("Asia/Tokyo").localize(timestamp)
             post['timestamp'] = timestamp.strftime("%Y-%m-%d %H:%M:%S")
-            # 評価カウンターを初期化
-            post_ratings[post["title"]] = {"good": 0, "bad": 0}
+
         return posts
+
 def main():
     st.title("掲示板アプリ")
+
     # 新規投稿の入力
     new_post_content = st.text_area("管理者以外記述厳禁", height=100)
     new_post_title = st.text_input("ページ")
+
     # 投稿ボタンが押された場合
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
-        if new_post_title and new_post_content:
-            save_post(new_post_title, new_post_content)
-    # 投稿一覧を表示
+        if "＠" in new_post_title or "＠" in new_post_content:
+            st.warning("禁止ワードが含まれています！")
+        save_post(new_post_title, new_post_content)
+        st.success("投稿が保存されました！")
+
+    # 保存された投稿の表示
     posts = load_posts()
+    st.subheader("保存された投稿")
     if not posts:
         st.info("まだ投稿がありません。")
     else:
         for post in posts:
             # 各タイトルにリンクを付けて表示
             post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
+
+            # 投票ボタンを追加
+            good_button = st.button(f"Good ({post_votes.get(post['title'], {'good': 0}).get('good', 0)})", key=f"good_{post['title']}")
+            bad_button = st.button(f"Bad ({post_votes.get(post['title'], {'bad': 0}).get('bad', 0)})", key=f"bad_{post['title']}")
+
+            if good_button:
+                # Goodボタンが押された場合の処理
+                if post['title'] in post_votes:
+                    post_votes[post['title']]['good'] += 1
+                else:
+                    post_votes[post['title']] = {'good': 1, 'bad': 0}
+                st.success("Goodボタンが押されました！")
+
+            if bad_button:
+                # Badボタンが押された場合の処理
+                if post['title'] in post_votes:
+                    post_votes[post['title']]['bad'] += 1
+                else:
+                    post_votes[post['title']] = {'good': 0, 'bad': 1}
+                st.warning("Badボタンが押されました！")
+
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプを表示
-
-            # GoodボタンとBadボタンを追加
-            col1, col2 = st.columns(2)
-            good_button = col1.button(f"Good ({post_ratings[post['title']]['good']})", key=f"good_{post['title']}")
-            bad_button = col2.button(f"Bad ({post_ratings[post['title']]['bad']})", key=f"bad_{post['title']}")
-            if good_button:
-
-    # Goodボタンのイラスト
-    good_icon = "👍"
-
-    # Badボタンのイラスト
-    bad_icon = "👎"
-
-def main():
-    st.title("GoodボタンとBadボタンのイラスト")
-
-    st.markdown("Goodボタンをクリックすると、Goodのカウントが増えます。")
-    st.markdown("Badボタンをクリックすると、Badのカウントが増えます。")
-
-    good_count = st.button(f"{good_icon} Good")
-    bad_count = st.button(f"{bad_icon} Bad")
-
-    st.write(f"Good: {good_count}")
-    st.write(f"Bad: {bad_count}")
+            st.markdown(post_url, unsafe_allow_html=True)
+            st.markdown("---")
 
 if __name__ == "__main__":
     main()
