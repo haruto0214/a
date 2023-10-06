@@ -52,15 +52,10 @@ def main():
             st.write(post['timestamp'])  # タイムスタンプを表示
 
             # グッドボタンとバッドボタンを表示
-            st.image("good_button.jpg", caption="グッドボタン")
-            st.image("bad_button.jpg", caption="バッドボタン")
-            
-            # グッドボタンがクリックされた場合の処理
             if st.button(f"グッドボタン ({post['good_count']})"):
                 post['good_count'] += 1
                 st.success("グッドボタンがクリックされました！")
 
-            # バッドボタンがクリックされた場合の処理
             if st.button(f"バッドボタン ({post['bad_count']})"):
                 post['bad_count'] += 1
                 st.error("バッドボタンがクリックされました！")
