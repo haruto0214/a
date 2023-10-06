@@ -45,9 +45,6 @@ def main():
         st.error("バッドボタンがクリックされました！")
 
         st.markdown("---")
-
-if __name__ == "__main__":
-    main()
     else:
         for post in posts:
             st.subheader(post['content'])
