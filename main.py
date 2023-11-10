@@ -4,6 +4,20 @@ import pandas as pd
 from datetime import datetime
 import pytz
 import urllib.parse
+# 禁止ワードをExcelファイルから読み込む
+df = pd.read_excel("banned_list.xlsx", sheet_name=0)
+#禁止ワードをbanned_words に
+banned_words = df['禁止ワード'].tolist()
+banned_words = [str(word) for word in banned_words]
+# ユーザーの投稿内容をチェックする関数
+def check_post_content(title, content):
+    
+    for banned_word in banned_words:
+        if str(banned_word) in title:
+             title = title.replace(banned_word, "＠" * len(banned_word))
+        if banned_word in content:
+            content = content.replace(banned_word, "＠" * len(banned_word))# タイトルと投稿内容の禁止ワードの検出し、禁止ワードがあったら文字を＠に変換
+    return title, content
     
 def save_post(title, content):
     #タイムスタンプを設定
@@ -50,7 +64,6 @@ def main():
             st.subheader(post['content'])
             st.write(post['timestamp'])  # タイムスタンプ
             st.markdown(post_url, unsafe_allow_html=True)
-
             st.markdown("---")
 if __name__ == "__main__":
     main()
