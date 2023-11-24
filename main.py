@@ -20,11 +20,11 @@ def check_post_content(title, content):
             content = content.replace(banned_word, "＠" * len(banned_word))
     return title, content
 
-def save_post(title, content):
+def save_post(title, content, image):
     # タイムスタンプを設定
     now = datetime.now(pytz.timezone("Asia/Tokyo"))
     now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-    post = {"title": title, "content": content, "timestamp": now_str}
+    post = {"title": title, "content": content, "timestamp": now_str, "image": image}
     with open('posts.json', 'a') as file:
         file.write(json.dumps(post))
         file.write('\n')
@@ -45,13 +45,14 @@ def main():
     # ページのタイトルの入力
     new_post_content = st.text_area("管理者以外記述厳禁", height=100)
     new_post_title = st.text_input("ページ")
+    uploaded_file = st.file_uploader("画像をアップロード", type=["jpg", "jpeg", "png"])
 
     # 投稿ボタンが押された場合
     if st.button("投稿する") and new_post_title and new_post_content:
         new_post_title, new_post_content = check_post_content(new_post_title, new_post_content)
         if "＠" in new_post_title or "＠" in new_post_content:
             st.warning("禁止ワードが含まれています！")
-        save_post(new_post_title, new_post_content)
+        save_post(new_post_title, new_post_content, uploaded_file)
         st.success("投稿が保存されました！")
 
     # 保存された投稿の表示
@@ -63,6 +64,8 @@ def main():
         for i, post in enumerate(posts, 1):
             post_url = f"<a href='https://maichan-bord-{urllib.parse.quote(post['title'])}.streamlit.app'>{post['title']}</a>"
             st.subheader(f"{i}. {post['content']}")
+            if post['image'] is not None:
+                st.image(post['image'], caption="投稿された画像", use_column_width=True)
             st.write(post['timestamp'])  # タイムスタンプ
             st.markdown(post_url, unsafe_allow_html=True)
             st.markdown("---")
